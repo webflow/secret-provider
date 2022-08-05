@@ -169,9 +169,11 @@ allprojects {
     task fatJar(dependsOn: [test, shadowJar])
 
     task createChecksums(type: Checksum, dependsOn: 'shadowJar') {
-      inputFiles.setFrom("${project.name}-${project.version}-all.jar")
-      checksumAlgorithm.set(Checksum.Algorithm.SHA512)
-      appendFileNameToChecksum.set(true)
+      files = fileTree(dir: "build/libs").matching {
+        exclude "**/*.sha256"
+      }
+      outputDir = new File("build/libs")
+      algorithm = Checksum.Algorithm.SHA256
     }
 
     artifacts {
