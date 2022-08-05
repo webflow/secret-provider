@@ -20,10 +20,8 @@ jobs:
       - name: Get the tag
         id: get_tag
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      - name: Assembly
-        run: sbt +assembly
-        env:
-          LENSES_TAG_NAME: ${{ steps.get_tag.outputs.VERSION }}
+      - name: Build shadowJar for Github
+        run: ./gradlew -Prelease -Pversion=${{ steps.get_tag.outputs.VERSION }} shadowJar createChecksums
       - name: Release to Github
         uses: softprops/action-gh-release@v1
         with:
